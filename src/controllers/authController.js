@@ -12,13 +12,12 @@ const authController = {
     try {
       const { nome, email, senha, cargoDesejado, chaveAcesso } = req.body;
 
-      // ... verificação de e-mail existente ...
-
       let roleFinal = "USER";
 
       if (cargoDesejado === "MUSICIAN") {
+        const senhaMusicoEsperada = process.env.SENHA_CADASTRO_PARA_MUSICO;
         // Use a constante definida no topo para maior segurança
-        if (chaveAcesso !== SENHA_CADASTRO_PARA_MUSICO) {
+        if (chaveAcesso !== chaveAcesso.trim() !==  senhaMusicoEsperada) {
           return res.status(403).json({ erro: "Chave de músico inválida." });
         }
         roleFinal = "MUSICIAN";
