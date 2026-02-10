@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const SENHA_CADASTRO_PARA_MUSICO = process.env.SENHA_CADASTRO_PARA_MUSICO;
 const SENHA_MESTRA_ADMIN = process.env.SENHA_CADASTRO_ADMIN;
 
 // Lógica de Interrupção para Músicos e Administradores:
@@ -15,7 +14,7 @@ const authController = {
       let roleFinal = "USER";
 
       if (cargoDesejado === "MUSICIAN") {
-        const senhaMusicoEsperada = process.env.SENHA_CADASTRO_PARA_MUSICO;
+        const senhaMusicoEsperada = SENHA_CADASTRO_PARA_MUSICO;
         // Use a constante definida no topo para maior segurança
         if (chaveAcesso !== chaveAcesso.trim() !==  senhaMusicoEsperada) {
           return res.status(403).json({ erro: "Chave de músico inválida." });
