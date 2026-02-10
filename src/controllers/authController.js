@@ -4,26 +4,35 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const SENHA_MESTRA_ADMIN = process.env.SENHA_CADASTRO_ADMIN;
+const SENHA_MESTRA_MUSICO = process.env.SENHA_CADASTRO_PARA_MUSICO;
 
 // Lógica de Interrupção para Músicos e Administradores:
 const authController = {
   registrar: async (req, res) => {
     try {
       const { nome, email, senha, cargoDesejado, chaveAcesso } = req.body;
+      console.log("Dados recebidos para registro:", { nome, email, cargoDesejado });
+
+      // Verificar se o e-mail já está registrado
+      const usuarioExistente = await prisma.usuario.findUnique({
+        where: { email },
+      });
+      if (usuarioExistente) {
+        return res.status(400).json({ erro: "E-mail já registrado." });
+      }
 
       let roleFinal = "USER";
 
       if (cargoDesejado === "MUSICIAN") {
-        const senhaMusicoEsperada = SENHA_CADASTRO_PARA_MUSICO;
-        // Use a constante definida no topo para maior segurança
-        if (chaveAcesso !== chaveAcesso.trim() !==  senhaMusicoEsperada) {
+        if (chaveAcesso !== SENHA_MESTRA_MUSICO) {
           return res.status(403).json({ erro: "Chave de músico inválida." });
+        }else if (chaveAcesso === SENHA_MESTRA_MUSICO) {
+          console.log("Finalizando cadastro...");
         }
         roleFinal = "MUSICIAN";
       }
 
       if (cargoDesejado === "ADMIN") {
-        // MUDANÇA AQUI: Use SENHA_MESTRA_ADMIN que puxa do seu .env
         if (chaveAcesso !== SENHA_MESTRA_ADMIN) {
           return res.status(403).json({ erro: "Chave de admin inválida." });
         }
