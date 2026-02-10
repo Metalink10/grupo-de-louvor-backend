@@ -7,7 +7,7 @@ const authController = require("../controllers/authController");
 
 router.post(
   "/integrante/criar",
-  authMiddleware(["USER", "MUSICIAN"]),
+  authMiddleware(["USER", "MUSICIAN", "ADMIN"]),
   hinoController.criarHino,
 );
 router.post(
@@ -16,17 +16,6 @@ router.post(
   upload.single("cifra"),
   hinoController.criarHinoAdm,
 );
-router.post(
-  "/integrante/criar",
-  upload.single("cifra"),
-  hinoController.criarHino,
-);
-router.post(
-  "/musico/admin",
-  upload.single("cifra"),
-  hinoController.criarHinoAdm,
-);
-
 router.get(
   "/buscar/:id",
   authMiddleware(["USER", "MUSICIAN", "ADMIN"]),
